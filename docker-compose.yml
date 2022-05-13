@@ -1,0 +1,63 @@
+version: "3"
+services:
+  izadanky-app:
+    image: conceptica/izadanky_app:local
+    depends_on:
+      - izadanky-postgres
+    env_file: &envs-izadanky-app
+      - .envs/.development/.izadanky_app
+      - .envs/.development/.izadanky_postgres
+      - .envs/.development/.izadanky_redis
+    ports:
+      - "8000:8000"
+    command: scripts/start.sh
+
+  izadanky-worker:
+    image: conceptica/izadanky_app:local
+    depends_on:
+      - izadanky-postgres
+      - izadanky-redis
+      - izadanky-app
+    env_file: *envs-izadanky-app
+    command: scripts/start_worker.sh
+
+  izadanky-postgres:
+    image: postgres:13.4-alpine
+    env_file:
+      - .envs/.development/.izadanky_postgres
+    volumes:
+      - ./_postgres_data_izadanky:/var/lib/postgresql/data
+
+  izadanky-redis:
+    image: redis:6.2-alpine
+
+  ipharm-app:
+    image: conceptica/ipharm_app:local
+    depends_on:
+      - ipharm-postgres
+    env_file:
+      - .envs/.development/.ipharm_app
+      - .envs/.development/.ipharm_postgres
+      - .envs/.development/.ipharm_redis
+    ports:
+      - "8001:8000"
+    command: scripts/start.sh
+
+  ipharm-postgres:
+    image: postgres:13.4-alpine
+    env_file:
+      - .envs/.development/.ipharm_postgres
+    volumes:
+      - ./_postgres_data_ipharm:/var/lib/postgresql/data
+
+#  izadanky-frontend:
+#    container_name: izadanky_frontend
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    env_file:
+#      - .envs/.development/.izadanky_frontend
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - .:/izadanky_fe

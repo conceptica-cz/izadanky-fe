@@ -1,0 +1,23 @@
+FROM node AS builder
+
+WORKDIR /izadanky_fe
+ENV PATH = "./izadanky_fe/node_modules/.bin:$PATH"
+
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install
+RUN npm install react-scripts@5.0.0 -g
+
+COPY . .
+ARG REACT_APP_ROOT_API
+ENV REACT_APP_ROOT_API=${REACT_APP_ROOT_API}
+
+ARG REACT_APP_ROOT_FILES
+ENV REACT_APP_ROOT_FILES=${REACT_APP_ROOT_FILES}
+
+RUN npm run build
+
+FROM alpine
+
+WORKDIR /app
+COPY --from=builder /izadanky_fe/build ./build
