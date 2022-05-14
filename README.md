@@ -73,9 +73,9 @@ $ docker-compose exec ipharm-app python manage.py populate
 To use [iPharm](https://github.com/conceptica-cz/ipharm-be) API you have to get a token.
 
 Add `ipharm` (you can choose any name) user to
-iPharm:  [create user](http://localhost:8002/admin/users/user/add/).
+iPharm:  [create user](http://localhost:8001/admin/users/user/add/).
 
-Create token for the added user:  [create token](http://localhost:8002/admin/authtoken/tokenproxy/add/).
+Create token for the added user:  [create token](http://localhost:8001/admin/authtoken/tokenproxy/add/).
 
 You have to add the token to the `.envs/.development/.izadanky_app` file (`IPHARM_TOKEN` variable).
 
